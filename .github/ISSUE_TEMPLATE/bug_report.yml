@@ -1,0 +1,48 @@
+name: Bug Report
+description: File a bug report
+labels: ["triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug 🐛!
+
+        Please search open/closed issues before submitting. Someone might have had the similar problem before 😉!
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A brief description of the issue.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: |
+        Explain how to reproduce the issue in the development environment.
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The release version of the backend or branch/commit.
+      placeholder: v6.1.0
+    validations:
+      required: true
+
+  - type: input
+    id: os-version
+    attributes:
+      label: Operating system
+      description: The operating system this issue occurred with.
+      placeholder: Linux/macOS/Windows
+
+  - type: textarea
+    id: additional-information
+    attributes:
+      label: Additional information
+      description: |
+        Use this section to provide any additional information you might have (e.g screenshots or screencasts).

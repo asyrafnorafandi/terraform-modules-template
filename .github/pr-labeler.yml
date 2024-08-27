@@ -1,0 +1,9 @@
+"kind/ci": ci/*
+"kind/bug": ["fix/*", "bug/*"]
+"kind/chore": chore/*
+"kind/refactor": refactor/*
+"kind/release": release/*
+"kind/revert": revert/*
+"kind/security": security/*
+"kind/documentation": ["documentation/*", "doc/*"]
+"kind/enhancement": ["feat/*", "feature/*"]

@@ -1,0 +1,81 @@
+name: Lint & Formatting
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    name: Format HCL
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Terraform format
+        uses: dflook/terraform-fmt@v1
+
+      - name: Reviewdog suggester
+        uses: reviewdog/action-suggester@v1
+        with:
+          tool_name: "terraform fmt -recursive"
+          cleanup: false
+
+      - name: Status check
+        shell: bash
+        run: git diff --exit-code
+
+  lint-find-dirs:
+    runs-on: ubuntu-latest
+    name: Find modules
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: set-matrix
+        # Ignore directories whose names start with .terraform or obsolete
+        run: |
+          matrix=$(find .  -type d \( -name '.terraform*' -o -name 'obsolete*' \) -prune -o \
+            -name '*.tf' \
+            -not -path '*/.terraform/*' \
+            -exec dirname {} \; \
+            | sort \
+            | uniq \
+            | jq --raw-input --slurp 'split("\n")| map(select(. != ""))')
+          echo "matrix=$(echo $matrix)" >> $GITHUB_OUTPUT
+    outputs:
+      tfdirs_matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint (${{ matrix.tfdir }})
+    needs: lint-find-dirs
+    strategy:
+      fail-fast: false
+      matrix:
+        tfdir: ${{ fromJson(needs.lint-find-dirs.outputs.tfdirs_matrix) }}
+    env:
+      TFLINT_PLUGIN_DIR: ${{ github.workspace }}/.tflint.d/plugins
+      TFLINT_CACHE_VER: 1 # Increment this to force a cache refresh
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - run: terraform init
+        working-directory: ${{ matrix.tfdir }}
+
+      - name: tflint
+        uses: reviewdog/action-tflint@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-check
+          fail_on_error: true
+          tflint_init: true
+          working_directory: ${{ matrix.tfdir }}
+          filter_mode: added
+          tflint_version: "v0.49.0"
+          # tflint_rulesets: Optional
