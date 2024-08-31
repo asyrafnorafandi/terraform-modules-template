@@ -61,6 +61,12 @@ $ cd <your_project_repository>
 
 # Install pre-commit hooks
 $ pre-commit install-hooks
+
+# Make code changes and try to commit. You should see the following output
+Terraform fmt............................................................Passed
+Terraform validate with tflint...........................................Passed
+Terraform validate with trivy............................................Passed
+Terraform docs...........................................................Passed
 ```
 
 You are all set to go to write your custom Terraform Module! 🚀
@@ -72,12 +78,13 @@ You are all set to go to write your custom Terraform Module! 🚀
 ---
 
 <!-- BEGIN_TF_DOCS -->
+
 ## Requirements
 
-| Name | Version |
-|------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8.0 |
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8.0 |
+| Name                                                                     | Version  |
+| ------------------------------------------------------------------------ | -------- |
+| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.8.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.8.0 |
 
 ## Providers
 
@@ -98,4 +105,5 @@ No inputs.
 ## Outputs
 
 No outputs.
+
 <!-- END_TF_DOCS -->
