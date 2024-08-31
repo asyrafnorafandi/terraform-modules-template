@@ -1,15 +1,10 @@
 repos:
-  - repo: https://github.com/terraform-docs/terraform-docs
-    rev: "v0.18.0"
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: "v1.94.1" # Get the latest from: https://github.com/antonbabenko/pre-commit-terraform/releases
     hooks:
-      - id: terraform-docs-go
+      - id: terraform_fmt
+      - id: terraform_tflint
+      - id: terraform_trivy
+      - id: terraform_docs
         args:
-          [
-            "markdown",
-            "table",
-            "--output-file",
-            "README.md",
-            "--output-mode",
-            "inject",
-            ".",
-          ]
+          - --args=--config=.terraform-docs.yml
